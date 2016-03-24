@@ -1,0 +1,14 @@
+1. Update package.json and `npm install`
+2. Would be server.js, but I think that's good as-is because all of the heavy lifting is elsewhere.  (Update if using sockets, natch)
+3. index.html
+	a. Rename genericController and $scope variables (and update partials)
+	b. Update names in genericFactory
+4. Change db name in config/mongoose.js
+5. Update names in server/routes.js
+6. Update controller
+7. Update model
+
+
+
+NB:
+* Angular date formatting filter: https://docs.angularjs.org/api/ng/filter/date
