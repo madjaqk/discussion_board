@@ -9,11 +9,15 @@
 
 			myApp.config(function($routeProvider){
 				$routeProvider
-					.when("/route", {
-						templateUrl: "partials/partial1.html"
+					.when("/", {
+						templateUrl: "partials/login.html",
+					})
+					.when("/dashboard", {
+						templateUrl: "partials/dashboard.html",
+						controller: "topicsController"
 					})
 					.otherwise({
-						redirectTo: "/route"
+						redirectTo: "/"
 					})
 			})
 
@@ -31,22 +35,55 @@
 				return factory
 			})
 
-			myApp.controller("genericController", [function($scope, genericFactory){
+			myApp.factory("userFactory", function($http){
+				var factory = {}
 
-				function documentList (){
-					genericFactory.index(function(data){
-						$scope.documents = data.data
+					factory.index = function(callback){
+						$http.get("/url/path/tk")
+							.then(function(output){
+								var documents = output
+								callback(documents)
+							})
+					}
+
+					factory.getID = function(user_name, callback){
+						$http.post("/users/create", {name: user_name})
+							.then(function(output){
+								console.log("factory output", output)
+								user = output
+								callback(user)
+							})
+					}
+
+				return factory
+			})
+
+			myApp.controller("usersController", function(userFactory){
+
+				function getDocuments(){
+					userFactory.index(function(data){
+						this.documents = data.data
 					})
 				}
 
-				$scope.addDocument = function(){
-					// factory function here
+				this.getUserID = function(){
+					userFactory.getID(this.user_name, function(data){
+						console.log(data)
+						this.user_name = data.data.name
+						this.user_id = "data.data._id"
+						console.log("this.user_id", this.user_id)
+						// window.location = "#/dashboard"
+					})
 				}
+			})
+
+			myApp.controller("topicsController", [function(){
+
 			}])
 		</script>
 	</head>
-	<body ng-app="myApp">
-		<a href="#/partial1.html">Partial1</a> <-- Links to partials start with #
+	<body ng-app="myApp" ng-controller="usersController as usersCtrl">
+		<a href="#/partial1.html">Partial1</a> <-- Links to partials start with # {{ usersCtrl }}
 		<div ng-view="">
 		</div>
 	</body>
